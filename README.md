@@ -37,11 +37,40 @@ chefが使える環境をプロビジョニング
 - - [[速報]Packerでさまざまな仮想マシンのテンプレートを作成する](http://www.ryuzee.com/contents/blog/6697)
 
 - packer build
- 
-    
-    time packer build -var 'aws_access_key=...' -var 'aws_secret_key=...' redhat-chef-solo.json
-    
+
+```
+$ time packer build -var 'aws_access_key=...' -var 'aws_secret_key=...' redhat-chef-solo.json
+```
     
 3分から5分くらいでできあがる
 
 ここでできあがったAMIをもとに、vagrant up すれば、楽しい世界が待っている
+
+
+vagrant boxを作る
+--------------
+
+- [■[AWS][Packer][chef]Packer+chef-soloでAWSのAMI構築を試してみた](http://d.hatena.ne.jp/toritori0318/20130820/1377018423) を参考に、post-processors を記述
+
+```
+  "post-processors": [{
+    "type": "vagrant",
+    "output": "output/{{ .Provider }}.box"
+  }]
+```
+
+- packer build
+
+```
+$ time packer build -var 'aws_access_key=...' -var 'aws_secret_key=...' redhat-vagrant-box.json
+```
+
+- output/aws.box できあがり
+
+```
+$ ls output/aws.box 
+output/aws.box
+```
+
+
+
